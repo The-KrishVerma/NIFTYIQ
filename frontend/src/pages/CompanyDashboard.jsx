@@ -1,18 +1,3 @@
-// // /**
-// //  * CompanyDashboard.jsx
-// //  *
-// //  * Fixes applied:
-// //  * 1. ScoreCard section is rendered inline here — import kept but used correctly.
-// //  *    (Previously ScoreCard.jsx contained a copy of CompanyDashboard, causing an
-// //  *    import cycle / infinite render loop. That file is now a proper component.)
-// //  * 2. newsLoading never gets stuck: the useEffect has no missing dependencies
-// //  *    and fetchLiveNews always resolves (returns [] on failure) — no infinite re-render.
-// //  * 3. symbolUpper is derived outside state/effects to avoid stale-closure issues.
-// //  */
-
-// import React, { useEffect, useState } from 'react';
-// import { useParams, Link } from 'react-router-dom';
-// import { fetchQualitativeAnalysis, fetchAllSectors, fetchLiveNews } from '../utils/dataFetcher';
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchQualitativeAnalysis, fetchAllSectors, fetchLiveNews, triggerPipeline } from '../utils/dataFetcher';

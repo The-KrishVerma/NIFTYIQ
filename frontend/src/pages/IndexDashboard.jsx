@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Globe, TrendingUp } from 'lucide-react';
 import Table from '../components/Table';
 import { fetchIndexScores, fetchAllSectors } from '../utils/dataFetcher';
+import companyNames from '../utils/companyNames.json';
 
 
 export default function IndexDashboard() {
@@ -69,7 +70,8 @@ export default function IndexDashboard() {
                         const safeSymbol = (item.symbol || '').toUpperCase();
 
                         return {
-                            name: item.symbol,
+                            symbol: item.symbol,
+                            name: companyNames[safeSymbol] || item.symbol,
                             industry: industryMap[safeSymbol] || 'Unclassified',
                             score: parseFloat(item.fundamental_score).toFixed(2),
                             val: !isNaN(parseFloat(item.z_score))
@@ -158,7 +160,7 @@ export default function IndexDashboard() {
                         <TrendingUp size={16} /> Global Rankings
                     </h2>
                     <span className="text-xs text-gray-500 bg-gray-800/50 px-3 py-1 rounded-full border border-gray-700">
-                        Total Companies: {indexData.length}
+                        Ranked Companies: {indexData.length}
                     </span>
                 </div>
 
@@ -166,7 +168,7 @@ export default function IndexDashboard() {
                 <Table
                     columns={indexColumns}
                     data={indexData}
-                    onRowClick={(row) => navigate(`/company/${row.name}`)}
+                    onRowClick={(row) => navigate(`/company/${row.symbol}`)}
                 />
             </section>
         </div>

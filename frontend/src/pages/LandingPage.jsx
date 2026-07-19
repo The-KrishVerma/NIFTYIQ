@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import { fetchIndustrySummary, fetchTopPerformers } from '../utils/dataFetcher';
 import { Globe, LayoutGrid, Building2, Swords } from 'lucide-react';
+import companyNames from '../utils/companyNames.json';
 
 export default function LandingPage() {
   const [topIndustries, setTopIndustries] = useState([]);
@@ -14,7 +15,7 @@ export default function LandingPage() {
       .then(res => {
         const arr = res.rankings || [];
         arr.sort((a, b) => (a.rank || 0) - (b.rank || 0));
-        setTopIndustries(arr.slice(0, 5));
+        setTopIndustries(arr.slice(0, 4));
       })
       .catch(console.error);
 
@@ -27,9 +28,10 @@ export default function LandingPage() {
         }
         const formatted = data.map(c => ({
           ticker: c.symbol,
-          industry: (c.industry || c.business_overview?.industry_position || 'N/A').replace(/_/g, ' ')
+          industry: (c.industry || c.business_overview?.industry_position || 'N/A').replace(/_/g, ' '),
+          zScore: c.z_score
         }));
-        setTopCompanies(formatted);
+        setTopCompanies(formatted.slice(0, 4));
       })
       .catch(err => console.error("Failed to fetch top performers:", err));
   }, []); // useEffect ends here correctly
@@ -43,172 +45,216 @@ export default function LandingPage() {
 
   // The component return must be out here
   return (
-  <div className="min-h-screen flex flex-col items-center pt-24 pb-16 px-4 md:px-8 bg-insight-black text-insight-text">
+    <div className="min-h-screen flex flex-col items-center pt-24 pb-4 px-4 md:px-8 relative overflow-hidden">
+      
+      {/* Animated Background Orbs */}
+      <div className="absolute top-20 -left-20 w-96 h-96 bg-insight-blue/20 rounded-full blur-[100px] pointer-events-none animate-float" />
+      <div className="absolute top-60 -right-20 w-96 h-96 bg-insight-purple/20 rounded-full blur-[100px] pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
 
-    {/* 1. Hero Section */}
-    <div className="text-center max-w-3xl w-full mb-20 mt-10">
-      <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
-  <span className="bg-gradient-to-r from-insight-blue via-insight-blue-soft to-insight-blue-lighter text-transparent bg-clip-text">
-    NIFTYIQ
-  </span>
-</h1>
+      {/* 1. Hero Section */}
+      <div className="text-center max-w-3xl w-full mb-10 mt-10 relative z-10">
+        <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
+          <span className="bg-gradient-to-r from-insight-blue via-insight-purple to-pink-500 text-transparent bg-clip-text drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+            NIFTYIQ
+          </span>
+        </h1>
 
-      <p className="text-insight-text text-lg md:text-xl mb-10 font-medium mt-6">
-        Relative Stock Intelligence Platform
-      </p>
+        <p className="text-gray-300 text-lg md:text-xl mb-10 font-light mt-6">
+          Relative Stock Intelligence Platform
+        </p>
 
-      <div className="flex justify-center w-full px-4">
-  <SearchBar className="w-full max-w-3xl h-14 text-base rounded-lg focus:ring-1 focus:ring-insight-blue-soft" />
-</div>
-    </div>
-
-    {/* 2. Explore Section */}
-    <section className="max-w-6xl w-full mb-20">
-  <h2 className="text-sm uppercase tracking-widest text-insight-muted font-semibold mb-8 text-center">
-    Explore Analysis
-  </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        {/* Index */}
-        <div className="bg-insight-card border border-insight-border rounded-xl p-6 flex flex-col justify-between hover:border-insight-blue-soft/40 transition duration-300">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Globe size={16} className="text-insight-blue" />
-              <h3 className="text-lg font-semibold text-insight-text">Index Leaderboard</h3>
-            </div>
-            <p className="text-insight-text text-sm mb-6">
-              Compare companies globally using standardized Z-Scores.
-            </p>
-          </div>
-          <Link
-            to="/index"
-            className="text-sm font-medium text-insight-blue-soft hover:underline self-start"
-          >
-            View Index →
-          </Link>
+        <div className="flex justify-center w-full px-4">
+          <SearchBar className="w-full max-w-3xl h-14 text-base rounded-xl border-white/10 bg-white/5 focus:ring-2 focus:ring-insight-purple backdrop-blur-lg" />
         </div>
-
-        {/* Industry */}
-        <div className="bg-insight-card border border-insight-border rounded-xl p-6 flex flex-col justify-between hover:border-insight-blue-soft/40 transition duration-300">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <LayoutGrid size={16} className="text-insight-blue" />
-              <h3 className="text-lg font-semibold text-insight-text">Industries</h3>
-            </div>
-            <p className="text-insight-text text-sm mb-6">
-              Explore sector-level insights and rankings.
-            </p>
-          </div>
-          <Link
-            to="/industries"
-            className="text-sm font-medium text-insight-blue-soft hover:underline self-start"
-          >
-            View Industries →
-          </Link>
-        </div>
-
-        {/* Watchlist */}
-        <div className="bg-insight-card border border-insight-border rounded-xl p-6 flex flex-col justify-between hover:border-insight-blue-soft/40 transition duration-300">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-insight-blue">⭐</span>
-              <h3 className="text-lg font-semibold text-insight-text">Watchlist</h3>
-            </div>
-            <p className="text-insight-text text-sm mb-6">
-              Track your starred companies and quick-access their reports.
-            </p>
-          </div>
-          <Link
-            to="/watchlist"
-            className="text-sm font-medium text-insight-blue-soft hover:underline self-start"
-          >
-            View Watchlist →
-          </Link>
-        </div>
-
-        {/* Compare */}
-        <div className="bg-insight-card border border-insight-border rounded-xl p-6 flex flex-col justify-between hover:border-insight-blue-soft/40 transition duration-300">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Swords size={16} className="text-insight-blue" />
-              <h3 className="text-lg font-semibold text-insight-text">Compare</h3>
-            </div>
-            <p className="text-insight-text text-sm mb-6">
-              Head-to-head AI verdict between two competitors.
-            </p>
-          </div>
-          <Link
-            to="/compare"
-            className="text-sm font-medium text-insight-blue-soft hover:underline self-start"
-          >
-            Start Battle →
-          </Link>
-        </div>
-
       </div>
-    </section>
 
-    {/* 3. Quick Access */}
-    <section className="max-w-6xl w-full"> {/* Changed from max-w-5xl to 6xl */}
-  <h2 className="text-sm uppercase tracking-widest text-insight-muted font-semibold mb-8 text-center">
-    Quick Access
-  </h2>
+      {/* NEW: Trending Companies as Center of Attraction */}
+      <section className="max-w-6xl w-full mb-12 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Trending Market Leaders</h2>
+            <p className="text-gray-400 text-sm max-w-2xl">
+              These companies have achieved the highest composite Z-Scores based on qualitative AI evaluations and quantitative financial metrics.
+            </p>
+          </div>
+          <Link to="/index" className="text-sm font-bold text-insight-blue hover:text-insight-blue-lighter flex items-center gap-1 transition-colors whitespace-nowrap">
+            View All Companies <span>→</span>
+          </Link>
+        </div>
 
-      {/* Top Companies */}
-      <div className="mb-12">
-        <h3 className="text-base font-semibold mb-4 text-insight-text">Top Companies</h3>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {topCompanies.map((company, idx) => (
-           <Link
-  key={idx}
-  to={`/company/${company.ticker}`}
-  className="bg-insight-card border border-insight-border rounded-xl p-6 min-h-[120px] flex flex-col justify-center text-center hover:border-insight-blue/50 transition duration-300 shadow-sm hover:shadow-md"
->
-  <div className="font-mono font-semibold text-base text-insight-text mb-2">
-    {company.ticker}
-  </div>
-  <div className="text-xs text-insight-muted line-clamp-2">
-    {company.industry}
-  </div>
-</Link>
+            <Link
+              key={idx}
+              to={`/company/${company.ticker}`}
+              className="glass-card p-6 flex flex-col justify-between hover:border-insight-blue/50 group relative overflow-hidden h-[160px]"
+            >
+              {/* Subtle accent line on top */}
+              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${idx % 2 === 0 ? 'from-insight-blue to-insight-blue-soft' : 'from-insight-purple to-pink-500'}`} />
+              
+              <div className="flex flex-col gap-1 items-start mb-2">
+                <div className="font-bold text-lg text-white group-hover:text-insight-blue transition-colors line-clamp-1 pr-2" title={companyNames[company.ticker] || company.ticker}>
+                  {companyNames[company.ticker] || company.ticker}
+                </div>
+                {company.zScore !== undefined && company.zScore !== null && (
+                  <div className="inline-block bg-white/10 border border-white/10 px-2 py-0.5 rounded text-[10px] font-bold text-insight-blue backdrop-blur-md whitespace-nowrap">
+                    Z-Score: {company.zScore > 0 ? '+' : ''}{company.zScore.toFixed(2)}
+                  </div>
+                )}
+              </div>
+              
+              <div className="text-xs text-gray-400 line-clamp-2 mt-auto pr-2 leading-relaxed">
+                {company.industry}
+              </div>
+            </Link>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Top Industries */}
+      {/* NEW: Top Ranked Industries */}
       {topIndustries.length > 0 && (
-        <div>
-          <h3 className="text-base font-semibold mb-4 text-insight-muted">
-            Top Ranked Industries
-          </h3>
+        <section className="max-w-6xl w-full mb-12 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+            <div>
+              <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Top Ranked Industries</h2>
+              <p className="text-gray-400 text-sm max-w-2xl">
+                The strongest performing sectors evaluated across the entire market index.
+              </p>
+            </div>
+            <Link to="/industries" className="text-sm font-bold text-insight-purple hover:text-pink-400 flex items-center gap-1 transition-colors whitespace-nowrap">
+              View All Industries <span>→</span>
+            </Link>
+          </div>
 
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {topIndustries.map((ind, idx) => (
               <Link
                 key={idx}
                 to={`/industry/${encodeURIComponent(ind.industry)}`}
-                // Reduced padding to p-4 and min-height to 90px
-                className="bg-insight-card border border-insight-border rounded-xl p-4 min-h-[90px] flex flex-col justify-between hover:border-insight-blue/50 transition duration-300 shadow-sm hover:shadow-md"
+                className="glass-card p-6 flex flex-col justify-between hover:border-insight-purple/50 group relative overflow-hidden h-[160px]"
               >
-                <div className="text-sm font-semibold mb-2 line-clamp-2 text-insight-text">
-                  {ind.industry.replace(/_/g, ' ')}
+                {/* Subtle accent line on top */}
+                <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${idx % 2 === 0 ? 'from-insight-purple to-pink-500' : 'from-indigo-500 to-insight-purple'}`} />
+                
+                <div className="flex flex-col gap-1 items-start mb-2">
+                  <div className="font-bold text-lg text-white group-hover:text-insight-purple transition-colors line-clamp-1 pr-2">
+                    {ind.industry.replace(/_/g, ' ')}
+                  </div>
+                  {ind.final_industry_zscore !== undefined && ind.final_industry_zscore !== null && (
+                    <div className="inline-block bg-white/10 border border-white/10 px-2 py-0.5 rounded text-[10px] font-bold text-insight-purple backdrop-blur-md whitespace-nowrap">
+                      Z-Score: {ind.final_industry_zscore > 0 ? '+' : ''}{ind.final_industry_zscore.toFixed(2)}
+                    </div>
+                  )}
                 </div>
-
-                <div className="flex justify-between items-end text-xs text-insight-muted mt-auto">
-                  <span>
-                    Z-Score: <span className="text-insight-blue-soft font-mono font-medium ml-1">
-                      {ind.final_industry_zscore !== undefined ? ind.final_industry_zscore.toFixed(4) : 'N/A'}
-                    </span>
-                  </span>
+                
+                <div className="text-xs text-gray-400 line-clamp-2 mt-auto pr-2 leading-relaxed">
+                  Leading: {ind.companies?.map(c => companyNames[c] || c).join(', ')}
                 </div>
               </Link>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-    </section>
-  </div>
-);
+      {/* 2. Explore Section */}
+      <section className="max-w-6xl w-full relative z-10">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Explore Analysis</h2>
+          <p className="text-gray-400 text-sm max-w-2xl">
+            Dive deeper into the index, compare competitors head-to-head, or access your watchlist.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[220px]">
+
+          {/* Compare - Tall Feature (Spans 2 rows) */}
+          <div className="glass-card p-8 flex flex-col justify-between group md:col-span-1 md:row-span-2 relative overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-pink-500/20 transition-colors duration-500" />
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 rounded-xl bg-pink-500/10 text-pink-500 group-hover:bg-pink-500/20 transition-colors shadow-inner">
+                  <Swords size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-white">Compare Arena</h3>
+              </div>
+              <p className="text-gray-400 text-base mb-6 leading-relaxed max-w-sm">
+                Step into the arena and generate a head-to-head AI verdict between any two competitors. Discover who holds the ultimate competitive moat.
+              </p>
+            </div>
+            <Link
+              to="/compare"
+              className="text-base font-bold text-pink-500 hover:text-pink-400 self-start flex items-center gap-2 transition-colors mt-auto"
+            >
+              Start Battle <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+
+          {/* Index - Wide Feature (Spans 2 cols) */}
+          <div className="glass-card p-8 flex flex-col justify-between group md:col-span-2 md:row-span-1 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-full bg-insight-blue/5 blur-3xl pointer-events-none group-hover:bg-insight-blue/10 transition-colors duration-500" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-xl bg-insight-blue/10 text-insight-blue group-hover:bg-insight-blue/20 transition-colors">
+                  <Globe size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-white">Global Index Leaderboard</h3>
+              </div>
+              <p className="text-gray-400 text-sm mb-6 leading-relaxed max-w-lg">
+                View the definitive ranking of all evaluated NIFTY companies. Our engine normalizes qualitative AI evaluations and quantitative fundamentals into a single comparative Z-Score.
+              </p>
+            </div>
+            <Link
+              to="/index"
+              className="relative z-10 text-sm font-bold text-insight-blue hover:text-insight-blue-lighter self-start flex items-center gap-1 transition-colors mt-auto"
+            >
+              View Index Rankings <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+
+          {/* Industry - Standard */}
+          <div className="glass-card p-8 flex flex-col justify-between group md:col-span-1 md:row-span-1">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-insight-purple/10 text-insight-purple group-hover:bg-insight-purple/20 transition-colors">
+                  <LayoutGrid size={22} />
+                </div>
+                <h3 className="text-lg font-bold text-white">Industries</h3>
+              </div>
+              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                Explore aggregated sector-level insights and identify the strongest sectors in the market.
+              </p>
+            </div>
+            <Link
+              to="/industries"
+              className="text-sm font-bold text-insight-purple hover:text-pink-400 self-start flex items-center gap-1 transition-colors mt-auto"
+            >
+              View Industries <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+
+          {/* Watchlist - Standard */}
+          <div className="glass-card p-8 flex flex-col justify-between group md:col-span-1 md:row-span-1">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-yellow-500/10 text-yellow-500 group-hover:bg-yellow-500/20 transition-colors">
+                  <span className="text-xl leading-none">⭐</span>
+                </div>
+                <h3 className="text-lg font-bold text-white">Watchlist</h3>
+              </div>
+              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                Track your starred companies and quick-access their intelligence dashboards.
+              </p>
+            </div>
+            <Link
+              to="/watchlist"
+              className="text-sm font-bold text-yellow-500 hover:text-yellow-400 self-start flex items-center gap-1 transition-colors mt-auto"
+            >
+              View Watchlist <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  );
 }

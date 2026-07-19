@@ -38,13 +38,13 @@ export default function ScoreCard({ scores, className }) {
               {/* FRONT */}
               <div
                 className={cn(
-                 "absolute inset-0 rounded-3xl",
-    "bg-[#0f172a]/90 backdrop-blur-xl",
-    "border border-white/10",
-    "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
-    "p-6 flex flex-col justify-between overflow-hidden",
-    "transition-all duration-300 hover:border-blue-400/30 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]",
-    "[backface-visibility:hidden]"
+                  "absolute inset-0 rounded-3xl",
+                  "bg-[#0f172a]/90 backdrop-blur-xl",
+                  "border border-white/10",
+                  "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
+                  "p-6 flex flex-col justify-between overflow-hidden",
+                  "transition-all duration-300 hover:border-blue-400/30 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]",
+                  "[backface-visibility:hidden]"
                 )}
               >
                 {/* subtle decorative glow */}
@@ -53,10 +53,7 @@ export default function ScoreCard({ scores, className }) {
 
                 <div className="relative flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-blue-300">
-                      {m.key}
-                    </div>
-                    <h3 className="text-xl font-semibold tracking-tight text-white">
+                    <h3 className="text-2xl font-semibold tracking-tight text-white">
                       {m.label}
                     </h3>
                     <p className="mt-2 max-w-[18rem] text-sm leading-6 text-slate-400">
@@ -71,11 +68,7 @@ export default function ScoreCard({ scores, className }) {
                   </div>
                 </div>
 
-                <div className="relative mt-6 flex items-center justify-between gap-4">
-                  <div className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
-                    Tap to view reasoning
-                  </div>
-
+                <div className="relative mt-6 flex items-center justify-end gap-4">
                   <button
                     onClick={() => toggleFlip(m.key)}
                     className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-blue-200 transition-all hover:bg-blue-400/15 hover:border-blue-300/30 hover:text-white"
@@ -90,12 +83,12 @@ export default function ScoreCard({ scores, className }) {
               <div
                 className={cn(
                   "absolute inset-0 rounded-3xl",
-    "bg-blue",
-    "border border-white/10",
-    "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
-    "p-6 flex flex-col overflow-hidden",
-    "transition-all duration-300 hover:border-blue-400/30",
-    "[backface-visibility:hidden] [transform:rotateY(180deg)]"
+                  "bg-[#0f172a]/90 backdrop-blur-xl",
+                  "border border-white/10",
+                  "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
+                  "p-6 flex flex-col overflow-hidden",
+                  "transition-all duration-300 hover:border-blue-400/30",
+                  "[backface-visibility:hidden] [transform:rotateY(180deg)]"
                 )}
               >
                 <div className="pointer-events-none absolute -top-24 right-0 h-56 w-56 rounded-full bg-blue-500/10 blur-3xl" />
@@ -104,9 +97,9 @@ export default function ScoreCard({ scores, className }) {
                 <div className="relative mb-4 flex items-center justify-between gap-3">
                   <div>
                     <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-blue-300">
-                      {m.key} Reasoning
+                      Reasoning
                     </div>
-                    <h3 className="text-xl font-semibold tracking-tight text-white">
+                    <h3 className="text-2xl font-semibold tracking-tight text-white">
                       {m.label}
                     </h3>
                   </div>

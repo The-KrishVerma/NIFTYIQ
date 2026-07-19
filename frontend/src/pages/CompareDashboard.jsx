@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Swords, Loader2 } from 'lucide-react';
 import MetricCard from '../components/MetricCard';
+import companyNames from '../utils/companyNames.json';
 
 export default function CompareDashboard() {
   const [companies, setCompanies] = useState([]);
@@ -83,8 +84,8 @@ export default function CompareDashboard() {
       <div className="flex-1 bg-insight-card border border-insight-border rounded-2xl p-6 shadow space-y-6">
         {/* Header */}
         <div className="text-center border-b border-insight-border pb-4">
-          <h2 className="text-3xl font-bold text-white mb-1">{symbol}</h2>
-          <p className="text-insight-muted text-sm">{companyData.business_overview?.industry_position || 'N/A'}</p>
+          <h2 className="text-3xl font-bold text-white mb-1 leading-tight">{companyNames[symbol] || symbol}</h2>
+          <p className="text-insight-muted text-sm mt-1">{companyData.business_overview?.industry_position || 'N/A'}</p>
         </div>
         
         {/* Final Score */}
@@ -160,10 +161,10 @@ export default function CompareDashboard() {
       <div className="text-center space-y-4 mb-10">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white flex items-center justify-center gap-3">
           <Swords className="text-insight-blue" size={40} />
-          Head-to-Head Arena
+          Comparative Analysis
         </h1>
         <p className="text-insight-muted max-w-2xl mx-auto">
-          Select two companies to pit them against each other. Our AI judge will declare a winner based on qualitative moats and quantitative metrics.
+          Select two companies to evaluate their relative strengths. The AI model will provide a comparative analysis based on qualitative moats and quantitative metrics.
         </p>
       </div>
       
@@ -174,7 +175,7 @@ export default function CompareDashboard() {
           onChange={(e) => setSym1(e.target.value)}
           className="bg-insight-black border border-insight-border text-white px-4 py-3 rounded-lg focus:outline-none focus:border-insight-blue w-full md:w-64"
         >
-          {companies.map(c => <option key={`1-${c.symbol}`} value={c.symbol}>{c.symbol} - {c.industry}</option>)}
+          {companies.map(c => <option key={`1-${c.symbol}`} value={c.symbol}>{companyNames[c.symbol] || c.symbol}</option>)}
         </select>
         
         <span className="text-2xl font-black text-insight-blue-soft italic">VS</span>
@@ -184,7 +185,7 @@ export default function CompareDashboard() {
           onChange={(e) => setSym2(e.target.value)}
           className="bg-insight-black border border-insight-border text-white px-4 py-3 rounded-lg focus:outline-none focus:border-insight-blue w-full md:w-64"
         >
-          {companies.map(c => <option key={`2-${c.symbol}`} value={c.symbol}>{c.symbol} - {c.industry}</option>)}
+          {companies.map(c => <option key={`2-${c.symbol}`} value={c.symbol}>{companyNames[c.symbol] || c.symbol}</option>)}
         </select>
         
         <button 
@@ -192,7 +193,7 @@ export default function CompareDashboard() {
           disabled={loading}
           className="w-full md:w-auto px-8 py-3 bg-insight-blue hover:bg-insight-blue-soft text-white rounded-lg font-bold tracking-wide transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          {loading ? <><Loader2 size={18} className="animate-spin" /> Judging...</> : "FIGHT!"}
+          {loading ? <><Loader2 size={18} className="animate-spin" /> Analyzing...</> : "Compare"}
         </button>
       </div>
       
@@ -211,7 +212,7 @@ export default function CompareDashboard() {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-[80px] pointer-events-none" />
             
             <h3 className="text-xl md:text-2xl font-bold text-insight-blue mb-6 flex items-center gap-2">
-              👑 The AI Verdict
+              Comparative Verdict
             </h3>
             
             <div className="prose prose-invert max-w-none prose-p:leading-relaxed prose-p:text-lg prose-p:text-gray-200">

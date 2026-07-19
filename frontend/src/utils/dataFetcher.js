@@ -62,3 +62,13 @@ export async function triggerPipeline(symbol) {
   if (!res.ok) throw new Error('Failed to trigger pipeline');
   return res.json();
 }
+
+export async function compareCompanies(sym1, sym2) {
+  const res = await fetch(`${API_BASE_URL}/api/compare`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ symbols: [sym1, sym2] })
+  });
+  if (!res.ok) throw new Error(`Failed to compare ${sym1} and ${sym2}`);
+  return res.json();
+}

@@ -431,35 +431,34 @@ def compare_companies(request: CompareRequest):
 # WATCHLIST ENDPOINTS
 # ============================
 
-# We use a single global watchlist document for now
+# We use a user-specific document for watchlists. Defaulting to 'default_user' if not provided.
 DEFAULT_USER = "default"
 
 @app.get("/api/watchlist")
-def get_watchlist():
-    doc = db.watchlists.find_one({"user_id": DEFAULT_USER})
+def get_watchlist(user_id: str = DEFAULT_USER):
+    doc = db.watchlists.find_one({"user_id": user_id})
     if not doc:
         return []
     return doc.get("symbols", [])
 
 @app.post("/api/watchlist/{symbol}")
-def add_to_watchlist(symbol: str):
-    sym = symbol.upper().strip()
+def add_to_watchlist(symbol: str, user_id: str = DEFAULT_USER):
+    # Upsert the watchlist doc to ensure it exists
     db.watchlists.update_one(
-        {"user_id": DEFAULT_USER},
-        {"$addToSet": {"symbols": sym}},
+        {"user_id": user_id},
+        {"$addToSet": {"symbols": symbol.upper()}},
         upsert=True
     )
-    doc = db.watchlists.find_one({"user_id": DEFAULT_USER})
+    doc = db.watchlists.find_one({"user_id": user_id})
     return doc.get("symbols", [])
 
 @app.delete("/api/watchlist/{symbol}")
-def remove_from_watchlist(symbol: str):
-    sym = symbol.upper().strip()
+def remove_from_watchlist(symbol: str, user_id: str = DEFAULT_USER):
     db.watchlists.update_one(
-        {"user_id": DEFAULT_USER},
-        {"$pull": {"symbols": sym}}
+        {"user_id": user_id},
+        {"$pull": {"symbols": symbol.upper()}}
     )
-    doc = db.watchlists.find_one({"user_id": DEFAULT_USER})
+    doc = db.watchlists.find_one({"user_id": user_id})
     return doc.get("symbols", []) if doc else []
 
 # ============================

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Trophy, TrendingUp, TrendingDown, ArrowRight, Info } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, ReferenceLine } from 'recharts';
 import { getInvestmentTag } from '../utils/getInvestmentTag';
 import TagBadge from '../components/TagBadge';
+import companyNames from '../utils/companyNames.json';
 
 export default function IndustryDashboard() {
   const { industry } = useParams();
@@ -114,10 +115,6 @@ const formatZ = (val) => {
         <Link to="/" className="text-gray-500 hover:text-insight-blue transition-colors flex items-center gap-2 text-sm font-medium">
           <ArrowLeft size={16} /> Back to Home
         </Link>
-        <div className="h-4 w-px bg-gray-700"></div>
-        <Link to="/industries" className="text-gray-500 hover:text-insight-purple transition-colors flex items-center text-sm font-medium">
-          Back to Industries
-        </Link>
       </div>
 
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-800 pb-6 relative">
@@ -134,22 +131,26 @@ const formatZ = (val) => {
         </div>
       </header>
 
-     <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Business Quality Z-Score', val: bqZ },
-          { label: 'Cyclicality Z-Score', val: cyZ },
-          { label: 'Return Profile Z-Score', val: rpZ }
+          { label: 'Business Quality Z-Score', val: bqZ, desc: 'Moat, pricing power, scalability' },
+          { label: 'Cyclicality Z-Score', val: cyZ, desc: 'Revenue stability, demand sensitivity' },
+          { label: 'Return Profile Z-Score', val: rpZ, desc: 'ROE, ROCE, capital efficiency' },
+          { label: 'Governance Z-Score', val: bgZ, desc: 'Management quality, transparency' }
         ].map((metric, idx) => (
-          <div key={idx} className="bg-insight-card border border-gray-800/60 p-5 rounded-xl shadow-sm flex items-center justify-between">
-            <div>
-              <h3 className="text-gray-500 text-xs tracking-widest uppercase font-bold mb-1">{metric.label}</h3>
-              <p className={`text-2xl font-mono font-bold ${getMetricColor(metric.val)}`}>
-                {metric.val !== null && metric.val !== undefined ? Number(metric.val) > 0 ? `+${Number(metric.val).toFixed(2)}` : Number(metric.val).toFixed(2) : 'N/A'}
-              </p>
+          <div key={idx} className="bg-insight-card border border-gray-800/60 p-4 rounded-xl shadow-sm flex flex-col justify-between">
+            <div className="flex items-start justify-between mb-1">
+              <div>
+                <h3 className="text-gray-500 text-xs tracking-widest uppercase font-bold mb-1">{metric.label}</h3>
+                <p className="text-gray-400 text-[10px] leading-tight mb-2 max-w-[90%]">{metric.desc}</p>
+              </div>
+              <div className={`p-2 rounded-full shrink-0 ${Number(metric.val) > 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                {Number(metric.val) > 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+              </div>
             </div>
-            <div className={`p-3 rounded-full ${Number(metric.val) > 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
-              {Number(metric.val) > 0 ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
-            </div>
+            <p className={`text-2xl font-mono font-bold ${getMetricColor(metric.val)}`}>
+              {metric.val !== null && metric.val !== undefined ? Number(metric.val) > 0 ? `+${Number(metric.val).toFixed(2)}` : Number(metric.val).toFixed(2) : 'N/A'}
+            </p>
           </div>
         ))}
       </section>
@@ -164,8 +165,9 @@ const formatZ = (val) => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
-                <XAxis dataKey="name" stroke="#666" tick={{ fill: '#888', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis domain={[-3, 3]} stroke="#666" tick={{ fill: '#888', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <ReferenceLine y={0} stroke="#ffffff" />
+                <XAxis dataKey="name" stroke="#ffffff" tick={{ fill: '#ffffff', fontSize: 11 }} tickLine={true} axisLine={{ stroke: '#ffffff' }} />
+                <YAxis domain={[-3, 3]} stroke="#ffffff" tick={{ fill: '#ffffff', fontSize: 11 }} tickLine={true} axisLine={{ stroke: '#ffffff' }} />
                <Tooltip
   // This is the "grey color" cursor that highlights the bar you are over
   cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} 
@@ -203,9 +205,9 @@ const formatZ = (val) => {
               {/* break-all ensures long names like TATACONSUM don't overflow */}
              <Link 
                 to={`/company/${topCompany.symbol}`} 
-                className="text-4xl font-black text-gray-100 hover:text-insight-purple transition-colors tracking-tight px-2"
+                className="text-4xl font-black text-gray-100 hover:text-insight-purple transition-colors tracking-tight px-2 text-center break-words"
               >
-                {topCompany.symbol}
+                {companyNames[topCompany.symbol] || topCompany.symbol}
               </Link>
               
               <div className="flex items-center justify-center gap-2 mt-3">

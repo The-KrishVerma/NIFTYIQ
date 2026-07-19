@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+.env.*
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Data (keeping it ignored as per existing config unless requested otherwise)
+data/
+
+# Logs
+*.log
+# Local Netlify folder
+.netlify
+myenv/
+.zip

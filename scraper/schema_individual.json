@@ -1,0 +1,110 @@
+{
+    "company_overview": "",
+    "business_overview": {
+        "business_model": "",
+        "primary_revenue_drivers": [],
+        "customer_segments": [],
+        "asset_intensity": "asset-light | asset-moderate | asset-heavy",
+        "operating_segments": [],
+        "geographic_exposure": [],
+        "industry_position": ""
+    },
+    "business_quality_signals": {
+        "BQ": "integer score from 0 to 100",
+        "factors_considered": {
+            "competitive_moat": "none | weak | moderate | strong | dominant",
+            "pricing_power": "none | low | moderate | high",
+            "revenue_predictability": "volatile | mixed | predictable | highly_predictable",
+            "customer_concentration": "high | moderate | low | diversified"
+        },
+        "reasoning_points": []
+    },
+    "cyclicality_signals": {
+        "CY": "integer score from 0 to 100",
+        "factors_considered": {
+            "demand_stability": "volatile | cyclical | moderately_stable | stable | highly_stable",
+            "commodity_exposure": "high | moderate | low | none",
+            "regulatory_dependence": "high | moderate | low | minimal",
+            "revenue_volatility": "high | moderate | low | minimal"
+        },
+        "reasoning_points": []
+    },
+    "return_profile_signals": {
+        "RP": "integer score from 0 to 100",
+        "factors_considered": {
+            "growth_potential": "declining | low | moderate | high | very_high",
+            "innovation_intensity": "none | low | moderate | high",
+            "scalability": "none | limited | moderate | high",
+            "can_grow_faster_than_gdp": null
+        },
+        "structural_growth_drivers": [],
+        "innovation_signals": [],
+        "new_business_optionalities": [],
+        "export_opportunities": [],
+        "reasoning_points": []
+    },
+    "governance_signals": {
+        "BG": "integer score from 0 to 100",
+        "factors_considered": {
+            "leverage_level": "dangerous | high | moderate | low | debt_free",
+            "liquidity_position": "weak | adequate | strong | very_strong",
+            "audit_opinion": "qualified | modified | unmodified",
+            "governance_quality": "poor | below_average | average | good | excellent",
+            "transparency_level": "opaque | low | moderate | high | very_high",
+            "related_party_severity": "material_concern | moderate | minor | clean"
+        },
+        "governance_red_flags": {
+            "related_party_concerns": false,
+            "audit_qualifications": false,
+            "poor_disclosure_quality": false,
+            "management_integrity_issues": false
+        },
+        "reasoning_points": []
+    },
+    "risk_analysis": {
+        "operational_risks": [
+            {
+                "risk": "",
+                "severity": "high | medium | low",
+                "evidence": {"pg": "", "quote": ""}
+            }
+        ],
+        "financial_risks": [
+            {
+                "risk": "",
+                "severity": "high | medium | low",
+                "evidence": {"pg": "", "quote": ""}
+            }
+        ],
+        "industry_risks": [
+            {
+                "risk": "",
+                "severity": "high | medium | low",
+                "evidence": {"pg": "", "quote": ""}
+            }
+        ],
+        "regulatory_risks": [
+            {
+                "risk": "",
+                "severity": "high | medium | low",
+                "evidence": {"pg": "", "quote": ""}
+            }
+        ]
+    },
+    "pros_and_cons": {
+        "pros": [],
+        "cons": []
+    },
+    "stockholder_details": {
+        "top_shareholders": [
+            {
+                "name": "",
+                "holding_percent": null,
+                "category": "promoter | institutional | public | other"
+            }
+        ],
+        "total_shareholders_count": null,
+        "promoter_holding_percent": null,
+        "public_holding_percent": null
+    }
+}

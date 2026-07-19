@@ -1,0 +1,10 @@
+mcp
+fastmcp
+pymongo
+python-dotenv
+yfinance
+google-generativeai
+pandas
+requests
+beautifulsoup4
+lxml

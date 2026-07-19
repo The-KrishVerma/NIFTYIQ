@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "required": [
+    "industry",
+    "best_performing_company",
+    "best_company_justification",
+    "company_justifications"
+  ],
+  "properties": {
+    "industry": {
+      "type": "string"
+    },
+    "best_performing_company": {
+      "type": "string",
+      "description": "The ticker symbol of the company with the strongest fundamentals in this group."
+    },
+    "best_company_justification": {
+      "type": "string",
+      "description": "3-4 sentences explaining exactly why this is the best company based on the provided data."
+    },
+    "company_justifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["company", "tier", "justification"],
+        "properties": {
+          "company": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "string",
+            "enum": ["Market Leader", "Strong Challenger", "Average Follower", "Vulnerable Laggard"]
+          },
+          "justification": {
+            "type": "string",
+            "description": "1-2 sentences justifying this company's tier within the industry."
+          }
+        }
+      }
+    }
+  }
+}

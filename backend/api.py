@@ -180,7 +180,8 @@ def read_root():
 
 @app.get("/api/companies")
 def get_all_companies():
-    companies = list(db.companies.find({}, {"_id": 0, "symbol": 1}))
+    # Only return companies that have been successfully processed through the pipeline
+    companies = list(db.companies.find({"fundamental_score": {"$exists": True}}, {"_id": 0, "symbol": 1}))
     return [c["symbol"] for c in companies if "symbol" in c]
 
 
@@ -376,8 +377,8 @@ class CompareRequest(BaseModel):
 
 @app.get("/api/companies/basic")
 def get_basic_companies():
-    # Returns a list of all available symbols for the dropdown
-    companies = list(db.companies.find({}, {"_id": 0, "symbol": 1, "business_overview.industry_position": 1}))
+    # Only return companies that have been successfully processed through the pipeline
+    companies = list(db.companies.find({"fundamental_score": {"$exists": True}}, {"_id": 0, "symbol": 1, "business_overview.industry_position": 1}))
     return [{"symbol": c.get("symbol"), "industry": c.get("business_overview", {}).get("industry_position", "N/A")} for c in companies]
 
 @app.post("/api/compare")

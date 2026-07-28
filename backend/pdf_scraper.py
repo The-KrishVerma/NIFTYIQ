@@ -180,12 +180,15 @@ def fetch_annual_reports(symbol):
         "noOfRecords": 2
     }
 
-    response = session.get(API_URL, params=params)
-
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"[ERROR] {symbol} → {response.status_code}")
+    try:
+        response = session.get(API_URL, params=params, timeout=15)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"[ERROR] {symbol} → {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"[ERROR] Failed to fetch JSON for {symbol}: {e}")
         return None
 
 
@@ -194,16 +197,24 @@ def fetch_annual_reports(symbol):
 # -----------------------------
 
 def download_file(url, save_path):
-    try:
-        response = session.get(url)
-        if response.status_code == 200:
-            with open(save_path, "wb") as f:
-                f.write(response.content)
-            print(f"Downloaded → {save_path.name}")
-        else:
-            print(f"Failed to download: {url}")
-    except Exception as e:
-        print(f"Download error: {e}")
+    for attempt in range(3):
+        try:
+            # Added a 30-second timeout so it doesn't hang indefinitely
+            response = session.get(url, stream=True, timeout=30)
+            if response.status_code == 200:
+                with open(save_path, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+                print(f"Downloaded → {save_path.name}")
+                return
+            else:
+                print(f"Failed to download (Attempt {attempt+1}): {url} - Status: {response.status_code}")
+        except Exception as e:
+            print(f"Download error (Attempt {attempt+1}): {e}")
+        
+        time.sleep(3) # Wait before retrying
+    print(f"Skipping {save_path.name} after 3 failed attempts.")
 
 
 # -----------------------------

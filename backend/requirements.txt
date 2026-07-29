@@ -2,4 +2,5 @@ fastapi
 uvicorn
 pymongo
 python-dotenv
-yfinancegoogle-generativeai
+yfinance
+google-generativeai

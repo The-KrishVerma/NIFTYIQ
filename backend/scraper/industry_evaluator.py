@@ -309,14 +309,21 @@ def run_industry_evaluation():
     print(f"  📦 Loaded {len(all_companies)} company JSONs.")
 
     industry_map = defaultdict(list)
+    import time
     for sym in all_companies.keys():
-        try:
-            ticker = yf.Ticker(f"{sym}.NS")
-            industry = ticker.info.get("industry", "Unclassified")
-            safe_industry = industry.replace(" ", "_").replace("/", "_")
-            industry_map[safe_industry].append(sym)
-        except Exception:
-            industry_map["Unclassified"].append(sym)
+        industry = "Unclassified"
+        for attempt in range(3):
+            try:
+                ticker = yf.Ticker(f"{sym}.NS")
+                info = ticker.info
+                if "industry" in info:
+                    industry = info.get("industry").replace(" ", "_").replace("/", "_")
+                    break
+            except Exception:
+                pass
+            time.sleep(1.5)
+        
+        industry_map[industry].append(sym)
 
     print(f"  📊 Found {len(industry_map)} industries:")
 

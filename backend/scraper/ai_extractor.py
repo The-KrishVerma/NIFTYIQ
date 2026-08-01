@@ -90,12 +90,12 @@ else:
 # ============================================================
 
 individual_model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-1.5-flash",
     system_instruction=INDIVIDUAL_SYSTEM_PROMPT
 )
 
 peer_eval_model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-1.5-flash",
     system_instruction=PEER_EVAL_SYSTEM_PROMPT
 )
 

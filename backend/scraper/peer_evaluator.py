@@ -94,13 +94,21 @@ def run_global_standardized_peer_evaluation():
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
         
-        # Group by industry via yfinance
-        try:
-            ticker = yf.Ticker(f"{sym}.NS")
-            sector = ticker.info.get("industry", "Unclassified").replace(" ", "_").replace("/", "_")
-            sector_map[sector].append(sym)
-        except:
-            sector_map["Unclassified"].append(sym)
+        # Dynamically group by industry via yfinance with retries to prevent rate-limiting
+        sector = "Unclassified"
+        import time
+        for attempt in range(3):
+            try:
+                ticker = yf.Ticker(f"{sym}.NS")
+                info = ticker.info
+                if "industry" in info:
+                    sector = info.get("industry").replace(" ", "_").replace("/", "_")
+                    break
+            except Exception:
+                pass
+            time.sleep(1.5)
+        
+        sector_map[sector].append(sym)
 
     # 4. Generate the Sector-Specific JSON files (Leaderboards)
     for industry, symbols in sector_map.items():

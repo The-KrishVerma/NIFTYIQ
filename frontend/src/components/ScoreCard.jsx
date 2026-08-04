@@ -30,7 +30,7 @@ export default function ScoreCard({ scores, className }) {
           <div key={m.key} className="w-full [perspective:1400px]">
             <div
               className={cn(
-                "relative min-h-[290px] w-full transition-transform duration-700 ease-[cubic-bezier(.2,.8,.2,1)]",
+                "grid min-h-[290px] w-full transition-transform duration-700 ease-[cubic-bezier(.2,.8,.2,1)]",
                 "[transform-style:preserve-3d]",
                 isFlipped && "[transform:rotateY(180deg)]"
               )}
@@ -38,7 +38,7 @@ export default function ScoreCard({ scores, className }) {
               {/* FRONT */}
               <div
                 className={cn(
-                  "absolute inset-0 rounded-3xl",
+                  "col-start-1 row-start-1 h-full w-full rounded-3xl",
                   "bg-[#0f172a]/90 backdrop-blur-xl",
                   "border border-white/10",
                   "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
@@ -82,7 +82,7 @@ export default function ScoreCard({ scores, className }) {
               {/* BACK */}
               <div
                 className={cn(
-                  "absolute inset-0 rounded-3xl",
+                  "col-start-1 row-start-1 h-full w-full rounded-3xl",
                   "bg-[#0f172a]/90 backdrop-blur-xl",
                   "border border-white/10",
                   "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
